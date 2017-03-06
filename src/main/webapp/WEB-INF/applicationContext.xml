@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+
+
+
+    <bean id="ds" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/products"/>
+        <property name="username" value="root"/>
+        <property name="password" value="12301230s"/>
+    </bean>
+    <bean id="sf" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+        <property name="dataSource" ref="ds"/>
+        <property name="mappingResources">
+            <list>
+                <value>hbm/Product.hbm.xml</value>
+            </list>
+        </property>
+        <property name="schemaUpdate">
+            <value>true</value>
+        </property>
+        <property name="hibernateProperties">
+            <value>
+                hibernate.dialect=org.hibernate.dialect.MySQLInnoDBDialect
+                hibernate.show_sql=true
+                hbm2ddl.auto=update
+            </value>
+        </property>
+    </bean>
+    <bean id="productDAOImpl" class="com.xuan.dao.impl.ProductDAOImpl">
+        <property name="sessionFactory" ref="sf"/>
+    </bean>
+    <bean id="productServiceImpl" class="com.xuan.service.impl.ProductServiceImpl">
+        <property name="productDAO" ref="productDAOImpl"/>
+    </bean>
+    <bean name="productActionBean" class="com.xuan.action.ProductAction">
+        <property name="productService" ref="productServiceImpl"/>
+    </bean>
+</beans>
